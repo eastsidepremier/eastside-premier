@@ -1,0 +1,309 @@
+import React, { useState, useEffect } from 'react';
+import {
+  Building2,
+  MapPin,
+  Hammer,
+  Clock,
+  CheckCircle2,
+  ChevronRight,
+  Phone,
+  ArrowRight,
+  Menu,
+  X,
+  Search,
+  Zap,
+  TrendingUp,
+  Briefcase,
+  ShieldCheck,
+  Gem
+} from 'lucide-react';
+
+const App = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // SEO and Metadata Injection for the Eastside Market
+  useEffect(() => {
+    document.title = "Eastside Premier Properties | Premier Real Estate Flipping & Acquisitions";
+
+    const metaDescription = document.createElement('meta');
+    metaDescription.name = "description";
+    metaDescription.content = "Eastside Premier Properties: The leading real estate redevelopment firm in Bellevue, Kirkland, and Redmond. We specialize in high-margin flips and off-market acquisitions.";
+    document.head.appendChild(metaDescription);
+
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (metaDescription.parentNode) document.head.removeChild(metaDescription);
+    };
+  }, []);
+
+  const strategies = [
+    {
+      title: 'Off-Market Sourcing',
+      desc: 'We leverage deep local networks to find distressed and off-market inventory in Bellevue and Kirkland before they reach the general public.',
+      icon: <Zap className="text-amber-500" size={28} />,
+      tag: 'Hidden Inventory'
+    },
+    {
+      title: 'On-Market Precision',
+      desc: 'Utilizing proprietary data analysis to identify undervalued MLS listings in the Redmond tech corridor with high-yield potential.',
+      icon: <Search className="text-blue-500" size={28} />,
+      tag: 'Data Driven'
+    },
+    {
+      title: 'Luxury Redevelopment',
+      desc: 'Our design-build approach focuses on high-end finishes that resonate with the sophisticated Eastside buyer demographic.',
+      icon: <Gem className="text-emerald-500" size={28} />,
+      tag: 'Premium ROI'
+    }
+  ];
+
+  const targetCities = [
+    { name: 'Bellevue', zip: '98004, 98005, 98006', highlight: 'West Bellevue Luxury & Somerset Views' },
+    { name: 'Kirkland', zip: '98033, 98034', highlight: 'Waterfront Cottages & Rose Hill Gems' },
+    { name: 'Redmond', zip: '98052, 98053', highlight: 'Education Hill & Tech Corridor Moderns' }
+  ];
+
+  return (
+    <div className="min-h-screen bg-white font-sans text-slate-900 overflow-x-hidden">
+      {/* Navigation */}
+      <nav className={`fixed w-full z-50 transition-all duration-500 ${scrolled ? 'bg-white/90 backdrop-blur-md shadow-lg py-3' : 'bg-transparent py-6'}`}>
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+          <div className="flex items-center gap-2 group cursor-pointer">
+            <div className="bg-slate-900 p-2 rounded-lg transition-transform group-hover:rotate-12">
+              <Building2 className="text-emerald-500" size={24} />
+            </div>
+            <span className={`text-xl font-black tracking-tighter ${scrolled ? 'text-slate-900' : 'text-white'}`}>
+              EASTSIDE<span className="text-emerald-500">PREMIER</span>
+            </span>
+          </div>
+
+          <div className="hidden md:flex items-center gap-10">
+            {['Strategy', 'Portfolio', 'Contact'].map((item) => (
+              <a key={item} href={`#${item.toLowerCase()}`} className={`text-xs font-bold uppercase tracking-[0.2em] hover:text-emerald-500 transition-colors ${scrolled ? 'text-slate-600' : 'text-white/80'}`}>
+                {item}
+              </a>
+            ))}
+            <a href="#contact" className="bg-emerald-600 text-white px-7 py-3 rounded-full text-xs font-black uppercase tracking-widest hover:bg-emerald-500 transition-all hover:shadow-xl hover:-translate-y-0.5">
+              Work With Us
+            </a>
+          </div>
+
+          <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            {isMenuOpen ? <X size={28} className={scrolled ? 'text-slate-900' : 'text-white'} /> : <Menu size={28} className={scrolled ? 'text-slate-900' : 'text-white'} />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="relative h-screen flex items-center justify-center bg-slate-900">
+        <div className="absolute inset-0 overflow-hidden">
+          <img
+            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80"
+            alt="Modern Bellevue Architecture"
+            className="w-full h-full object-cover opacity-50 scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/40 to-slate-900"></div>
+        </div>
+
+        <div className="relative z-10 text-center px-6 max-w-5xl">
+          <div className="inline-flex items-center gap-3 bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/30 px-5 py-2 rounded-full text-emerald-400 text-xs font-black uppercase tracking-[0.3em] mb-8 animate-fade-in">
+            Bellevue • Kirkland • Redmond
+          </div>
+          <h1 className="text-6xl md:text-8xl font-black text-white leading-[0.9] mb-8 tracking-tighter">
+            REDEFINING THE <br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200 italic">EASTSIDE EXIT.</span>
+          </h1>
+          <p className="text-xl md:text-2xl text-slate-300 max-w-2xl mx-auto mb-12 font-light leading-relaxed">
+            We are strategic redevelopment partners specializing in high-end transformations across King County’s most prestigious corridors.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-5 justify-center">
+            <a href="#contact" className="bg-white text-slate-900 px-10 py-5 rounded-full text-sm font-black uppercase tracking-widest hover:bg-emerald-500 hover:text-white transition-all shadow-2xl flex items-center justify-center gap-3 group">
+              Submit A Deal <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            </a>
+            <a href="#strategy" className="bg-transparent border-2 border-white/20 text-white px-10 py-5 rounded-full text-sm font-black uppercase tracking-widest hover:bg-white/10 transition-all flex items-center justify-center">
+              Our Process
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats/Proof Section */}
+      <section className="py-12 bg-emerald-600">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          {[
+            { label: 'Avg ROI', val: '24%' },
+            { label: 'Days to Close', val: '7-14' },
+            { label: 'Projects Completed', val: '45+' },
+            { label: 'Capital Deployed', val: '$30M+' }
+          ].map((stat, i) => (
+            <div key={i} className="text-white">
+              <div className="text-3xl md:text-4xl font-black mb-1">{stat.val}</div>
+              <div className="text-[10px] uppercase font-bold tracking-widest opacity-80">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Strategy Cards */}
+      <section id="strategy" className="py-32 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
+            <div className="max-w-2xl">
+              <h2 className="text-4xl md:text-6xl font-black tracking-tighter mb-6 uppercase italic">The Premier Edge.</h2>
+              <p className="text-slate-500 text-lg">We don't just flip houses; we engineer value. Our team combines hyper-local market intelligence with world-class architectural design.</p>
+            </div>
+            <div className="hidden md:block pb-2">
+              <div className="flex gap-4">
+                <div className="w-12 h-1 bg-emerald-500"></div>
+                <div className="w-12 h-1 bg-slate-200"></div>
+                <div className="w-12 h-1 bg-slate-200"></div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-8">
+            {strategies.map((s, idx) => (
+              <div key={idx} className="group bg-white p-10 rounded-[2rem] border border-slate-100 hover:border-emerald-500/30 transition-all duration-500 hover:shadow-2xl relative overflow-hidden">
+                <div className="absolute -top-10 -right-10 w-32 h-32 bg-slate-50 rounded-full group-hover:bg-emerald-50 transition-colors"></div>
+                <div className="relative z-10">
+                  <div className="mb-8 inline-block p-4 bg-slate-900 rounded-2xl text-white transform group-hover:-rotate-6 transition-transform">
+                    {s.icon}
+                  </div>
+                  <div className="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-2">{s.tag}</div>
+                  <h3 className="text-2xl font-black mb-4 tracking-tight">{s.title}</h3>
+                  <p className="text-slate-500 leading-relaxed">{s.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* City Focus */}
+      <section className="py-32 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
+            <div className="relative">
+              <div className="absolute -inset-4 bg-emerald-600/5 rounded-[3rem] -rotate-3"></div>
+              <img
+                src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80"
+                alt="Eastside Property"
+                className="relative rounded-[2.5rem] shadow-2xl z-10 grayscale hover:grayscale-0 transition-all duration-700"
+              />
+              <div className="absolute bottom-10 -left-10 bg-slate-900 text-white p-8 rounded-3xl shadow-2xl z-20 hidden md:block max-w-xs border-b-8 border-emerald-500">
+                <p className="text-lg font-bold leading-tight mb-2">"Eastside Premier handled our Kirkland estate with total discretion and a fair cash price."</p>
+                <div className="text-xs uppercase tracking-widest text-emerald-500 font-black">— Satisfied Seller</div>
+              </div>
+            </div>
+            <div>
+              <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-8 uppercase italic">Hyper-Local <br/>Targeting.</h2>
+              <div className="space-y-6">
+                {targetCities.map((city, i) => (
+                  <div key={i} className="flex gap-6 p-6 rounded-2xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100 group">
+                    <div className="flex-shrink-0 w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 font-black">
+                      0{i + 1}
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold mb-1 flex items-center gap-2">
+                        {city.name} <span className="text-xs text-slate-400 font-mono">{city.zip}</span>
+                      </h4>
+                      <p className="text-slate-500 text-sm font-medium">{city.highlight}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="py-32 bg-slate-900 relative">
+        <div className="max-w-4xl mx-auto px-6 relative z-10">
+          <div className="bg-white rounded-[3rem] p-10 md:p-20 shadow-2xl">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-black mb-4 tracking-tighter uppercase italic">Ready to Exit?</h2>
+              <p className="text-slate-500 text-lg font-medium">Get a preliminary analysis for your property within 24 hours.</p>
+            </div>
+
+            <form className="grid gap-8">
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Full Name</label>
+                  <input type="text" className="w-full bg-slate-50 border-0 border-b-2 border-slate-200 focus:border-emerald-500 px-0 py-3 focus:ring-0 transition text-lg font-bold" placeholder="John Smith" />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Role</label>
+                  <select className="w-full bg-slate-50 border-0 border-b-2 border-slate-200 focus:border-emerald-500 px-0 py-3 focus:ring-0 transition text-lg font-bold appearance-none">
+                    <option>Property Owner</option>
+                    <option>Wholesaler</option>
+                    <option>Agent / Broker</option>
+                    <option>Investor Partner</option>
+                  </select>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Property Address</label>
+                <input type="text" className="w-full bg-slate-50 border-0 border-b-2 border-slate-200 focus:border-emerald-500 px-0 py-3 focus:ring-0 transition text-lg font-bold" placeholder="123 Bellevue Way NE..." />
+              </div>
+              <button className="w-full bg-emerald-600 text-white font-black text-xl py-6 rounded-2xl hover:bg-slate-900 transition-all shadow-xl hover:-translate-y-1 flex items-center justify-center gap-4">
+                SUBMIT FOR ANALYSIS <ArrowRight size={24} />
+              </button>
+              <div className="flex items-center justify-center gap-6 pt-4 grayscale opacity-40">
+                <ShieldCheck size={20} />
+                <span className="text-[10px] font-bold uppercase tracking-widest">Confidential & Direct</span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-slate-900 text-white py-24 border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-16">
+          <div className="col-span-2">
+            <div className="flex items-center gap-2 mb-8">
+              <div className="bg-emerald-600 p-2 rounded-lg">
+                <Building2 className="text-white" size={24} />
+              </div>
+              <span className="text-2xl font-black tracking-tighter">
+                EASTSIDE<span className="text-emerald-500">PREMIER</span>
+              </span>
+            </div>
+            <p className="text-slate-400 max-w-sm mb-10 leading-relaxed text-lg">
+              Setting the gold standard for redevelopment in King County's tech corridor. Precision acquisitions and world-class design.
+            </p>
+          </div>
+          <div>
+            <h5 className="font-bold text-sm uppercase tracking-widest text-emerald-500 mb-8">Navigation</h5>
+            <ul className="space-y-5 text-slate-400 font-bold uppercase text-[10px] tracking-widest">
+              <li><a href="#" className="hover:text-white transition-colors">Our Strategy</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Past Projects</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Investment Criteria</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5 className="font-bold text-sm uppercase tracking-widest text-emerald-500 mb-8">Contact</h5>
+            <ul className="space-y-5 text-slate-400">
+              <li className="flex items-center gap-3"><Phone size={16} /> (425) 555-0199</li>
+              <li className="font-bold text-white underline decoration-emerald-500 underline-offset-8">deals@eastsidepremier.com</li>
+            </ul>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto px-6 pt-20 mt-20 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+          <div>&copy; 2025 Eastside Premier Properties LLC.</div>
+          <div className="flex gap-8">
+            <span className="hover:text-white cursor-pointer">Privacy Policy</span>
+            <span className="hover:text-white cursor-pointer">Terms of Service</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default App;
