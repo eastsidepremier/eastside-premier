@@ -15,16 +15,36 @@ import {
   TrendingUp,
   Briefcase,
   ShieldCheck,
-  Gem
+  Gem,
+  ExternalLink,
+  Mail
 } from 'lucide-react';
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   // SEO and Metadata Injection for the Eastside Market
   useEffect(() => {
     document.title = "Eastside Premier Properties | Premier Real Estate Flipping & Acquisitions";
+
+    // Injecting reset styles to fix local "white space" on the right
+    const style = document.createElement('style');
+    style.innerHTML = `
+      body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        overflow-x: hidden;
+      }
+      #root {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    `;
+    document.head.appendChild(style);
 
     const metaDescription = document.createElement('meta');
     metaDescription.name = "description";
@@ -37,8 +57,15 @@ const App = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
       if (metaDescription.parentNode) document.head.removeChild(metaDescription);
+      if (style.parentNode) document.head.removeChild(style);
     };
   }, []);
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    // Logic for submission would go here
+    setIsSubmitted(true);
+  };
 
   const strategies = [
     {
@@ -61,18 +88,35 @@ const App = () => {
     }
   ];
 
+  const portfolioItems = [
+    {
+      city: 'Bellevue',
+      neighborhood: 'Somerset',
+      image: 'https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=800&q=80',
+      stats: { lift: '+42%', time: '85 Days' },
+      desc: 'Full structural renovation of a 1970s split-level into a modern glass-front masterpiece.'
+    },
+    {
+      city: 'Kirkland',
+      neighborhood: 'Rose Hill',
+      image: 'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=800&q=80',
+      stats: { lift: '+38%', time: '62 Days' },
+      desc: 'Cosmetic overhaul and ADU addition to a classic Kirkland cottage.'
+    }
+  ];
+
   const targetCities = [
-    { name: 'Bellevue', zip: '98004, 98005, 98006', highlight: 'West Bellevue Luxury & Somerset Views' },
+    { name: 'Bellevue', zip: '98004, 98005, 98006, 98007', highlight: 'West Bellevue Luxury & Somerset Views' },
     { name: 'Kirkland', zip: '98033, 98034', highlight: 'Waterfront Cottages & Rose Hill Gems' },
     { name: 'Redmond', zip: '98052, 98053', highlight: 'Education Hill & Tech Corridor Moderns' }
   ];
 
   return (
-    <div className="min-h-screen bg-white font-sans text-slate-900 overflow-x-hidden">
+    <div className="min-h-screen bg-white font-sans text-slate-900 overflow-x-hidden w-full">
       {/* Navigation */}
       <nav className={`fixed w-full z-50 transition-all duration-500 ${scrolled ? 'bg-white/90 backdrop-blur-md shadow-lg py-3' : 'bg-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-          <div className="flex items-center gap-2 group cursor-pointer">
+          <div className="flex items-center gap-2 group cursor-pointer" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
             <div className="bg-slate-900 p-2 rounded-lg transition-transform group-hover:rotate-12">
               <Building2 className="text-emerald-500" size={24} />
             </div>
@@ -99,7 +143,7 @@ const App = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center bg-slate-900">
+      <section className="relative h-screen flex items-center justify-center bg-slate-900 w-full overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
           <img
             src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80"
@@ -132,13 +176,13 @@ const App = () => {
       </section>
 
       {/* Stats/Proof Section */}
-      <section className="py-12 bg-emerald-600">
+      <section className="py-12 bg-emerald-600 w-full">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {[
             { label: 'Avg ROI', val: '24%' },
             { label: 'Days to Close', val: '7-14' },
-            { label: 'Projects Completed', val: '45+' },
-            { label: 'Capital Deployed', val: '$30M+' }
+            { label: 'Projects Completed', val: '15+' },
+            { label: 'Capital Deployed', val: '$10M+' }
           ].map((stat, i) => (
             <div key={i} className="text-white">
               <div className="text-3xl md:text-4xl font-black mb-1">{stat.val}</div>
@@ -149,7 +193,7 @@ const App = () => {
       </section>
 
       {/* Strategy Cards */}
-      <section id="strategy" className="py-32 bg-slate-50">
+      <section id="strategy" className="py-32 bg-slate-50 w-full">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
             <div className="max-w-2xl">
@@ -183,8 +227,51 @@ const App = () => {
         </div>
       </section>
 
+      {/* Portfolio Section */}
+      <section id="portfolio" className="py-32 bg-white w-full">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="mb-20 text-center">
+            <div className="text-emerald-600 font-black uppercase tracking-[0.3em] text-xs mb-4">Case Studies</div>
+            <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase italic">Recent Transformations.</h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-12">
+            {portfolioItems.map((item, idx) => (
+              <div key={idx} className="group cursor-pointer">
+                <div className="relative overflow-hidden rounded-[2.5rem] mb-8 h-[400px]">
+                  <img
+                    src={item.image}
+                    alt={item.neighborhood}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-10">
+                    <div className="flex gap-4">
+                      <div className="bg-emerald-500 text-white px-4 py-2 rounded-lg font-black text-xs uppercase tracking-widest flex items-center gap-2">
+                        <TrendingUp size={14} /> Value Lift: {item.stats.lift}
+                      </div>
+                      <div className="bg-white/20 backdrop-blur-md text-white px-4 py-2 rounded-lg font-black text-xs uppercase tracking-widest flex items-center gap-2">
+                        <Clock size={14} /> {item.stats.time}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="text-3xl font-black tracking-tight mb-2">{item.city} — {item.neighborhood}</h3>
+                    <p className="text-slate-500 font-medium max-w-sm">{item.desc}</p>
+                  </div>
+                  <div className="p-4 bg-slate-50 rounded-full group-hover:bg-emerald-500 group-hover:text-white transition-all">
+                    <ExternalLink size={20} />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* City Focus */}
-      <section className="py-32 bg-white">
+      <section className="py-32 bg-slate-50 w-full">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
             <div className="relative">
@@ -192,7 +279,7 @@ const App = () => {
               <img
                 src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80"
                 alt="Eastside Property"
-                className="relative rounded-[2.5rem] shadow-2xl z-10 grayscale hover:grayscale-0 transition-all duration-700"
+                className="relative rounded-[2.5rem] shadow-2xl z-10 grayscale hover:grayscale-0 transition-all duration-700 w-full"
               />
               <div className="absolute bottom-10 -left-10 bg-slate-900 text-white p-8 rounded-3xl shadow-2xl z-20 hidden md:block max-w-xs border-b-8 border-emerald-500">
                 <p className="text-lg font-bold leading-tight mb-2">"Eastside Premier handled our Kirkland estate with total discretion and a fair cash price."</p>
@@ -203,7 +290,7 @@ const App = () => {
               <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-8 uppercase italic">Hyper-Local <br/>Targeting.</h2>
               <div className="space-y-6">
                 {targetCities.map((city, i) => (
-                  <div key={i} className="flex gap-6 p-6 rounded-2xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100 group">
+                  <div key={i} className="flex gap-6 p-6 rounded-2xl hover:bg-white hover:shadow-xl transition-all border border-transparent hover:border-slate-100 group">
                     <div className="flex-shrink-0 w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 font-black">
                       0{i + 1}
                     </div>
@@ -222,51 +309,89 @@ const App = () => {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-32 bg-slate-900 relative">
+      <section id="contact" className="py-32 bg-slate-900 relative w-full">
         <div className="max-w-4xl mx-auto px-6 relative z-10">
-          <div className="bg-white rounded-[3rem] p-10 md:p-20 shadow-2xl">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-black mb-4 tracking-tighter uppercase italic">Ready to Exit?</h2>
-              <p className="text-slate-500 text-lg font-medium">Get a preliminary analysis for your property within 24 hours.</p>
-            </div>
+          <div className="bg-white rounded-[3rem] p-10 md:p-20 shadow-2xl transition-all duration-500">
+            {!isSubmitted ? (
+              <>
+                <div className="text-center mb-16">
+                  <h2 className="text-4xl md:text-5xl font-black mb-4 tracking-tighter uppercase italic">Ready to Exit?</h2>
+                  <p className="text-slate-500 text-lg font-medium">Get a preliminary analysis for your property within 24 hours.</p>
+                </div>
 
-            <form className="grid gap-8">
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Full Name</label>
-                  <input type="text" className="w-full bg-slate-50 border-0 border-b-2 border-slate-200 focus:border-emerald-500 px-0 py-3 focus:ring-0 transition text-lg font-bold" placeholder="John Smith" />
+                <form onSubmit={handleFormSubmit} className="grid gap-8">
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Full Name</label>
+                      <input required type="text" className="w-full bg-slate-50 border-0 border-b-2 border-slate-200 focus:border-emerald-500 px-0 py-3 focus:ring-0 transition text-lg font-bold" placeholder="John Smith" />
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Role</label>
+                      <select className="w-full bg-slate-50 border-0 border-b-2 border-slate-200 focus:border-emerald-500 px-0 py-3 focus:ring-0 transition text-lg font-bold appearance-none">
+                        <option>Property Owner</option>
+                        <option>Wholesaler</option>
+                        <option>Agent / Broker</option>
+                        <option>Investor Partner</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Email Address (Optional)</label>
+                      <div className="relative">
+                        <Mail className="absolute left-0 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
+                        <input type="email" className="w-full bg-slate-50 border-0 border-b-2 border-slate-200 focus:border-emerald-500 pl-7 pr-0 py-3 focus:ring-0 transition text-lg font-bold" placeholder="john@example.com" />
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Phone Number (Optional)</label>
+                      <div className="relative">
+                        <Phone className="absolute left-0 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
+                        <input type="tel" className="w-full bg-slate-50 border-0 border-b-2 border-slate-200 focus:border-emerald-500 pl-7 pr-0 py-3 focus:ring-0 transition text-lg font-bold" placeholder="(425) 555-0199" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Property Address</label>
+                    <input required type="text" className="w-full bg-slate-50 border-0 border-b-2 border-slate-200 focus:border-emerald-500 px-0 py-3 focus:ring-0 transition text-lg font-bold" placeholder="123 Bellevue Way NE..." />
+                  </div>
+                  <button type="submit" className="w-full bg-emerald-600 text-white font-black text-xl py-6 rounded-2xl hover:bg-slate-900 transition-all shadow-xl hover:-translate-y-1 flex items-center justify-center gap-4">
+                    SUBMIT FOR ANALYSIS <ArrowRight size={24} />
+                  </button>
+                  <div className="flex items-center justify-center gap-6 pt-4 grayscale opacity-40">
+                    <ShieldCheck size={20} />
+                    <span className="text-[10px] font-bold uppercase tracking-widest">Confidential & Direct</span>
+                  </div>
+                </form>
+              </>
+            ) : (
+              <div className="text-center py-20 animate-in fade-in zoom-in duration-500">
+                <div className="mb-8 inline-flex items-center justify-center w-24 h-24 bg-emerald-100 rounded-full text-emerald-600">
+                  <CheckCircle2 size={48} />
                 </div>
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Role</label>
-                  <select className="w-full bg-slate-50 border-0 border-b-2 border-slate-200 focus:border-emerald-500 px-0 py-3 focus:ring-0 transition text-lg font-bold appearance-none">
-                    <option>Property Owner</option>
-                    <option>Wholesaler</option>
-                    <option>Agent / Broker</option>
-                    <option>Investor Partner</option>
-                  </select>
-                </div>
+                <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tighter uppercase italic text-slate-900">Submission Received.</h2>
+                <p className="text-slate-500 text-xl font-medium max-w-lg mx-auto mb-10 leading-relaxed">
+                  We have received your request, our team will contact you soon with a preliminary property analysis.
+                </p>
+                <button
+                  onClick={() => setIsSubmitted(false)}
+                  className="text-emerald-600 font-black uppercase tracking-widest text-sm hover:text-slate-900 transition-colors"
+                >
+                  Submit Another Property
+                </button>
               </div>
-              <div className="space-y-3">
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Property Address</label>
-                <input type="text" className="w-full bg-slate-50 border-0 border-b-2 border-slate-200 focus:border-emerald-500 px-0 py-3 focus:ring-0 transition text-lg font-bold" placeholder="123 Bellevue Way NE..." />
-              </div>
-              <button className="w-full bg-emerald-600 text-white font-black text-xl py-6 rounded-2xl hover:bg-slate-900 transition-all shadow-xl hover:-translate-y-1 flex items-center justify-center gap-4">
-                SUBMIT FOR ANALYSIS <ArrowRight size={24} />
-              </button>
-              <div className="flex items-center justify-center gap-6 pt-4 grayscale opacity-40">
-                <ShieldCheck size={20} />
-                <span className="text-[10px] font-bold uppercase tracking-widest">Confidential & Direct</span>
-              </div>
-            </form>
+            )}
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-24 border-t border-white/5">
+      <footer className="bg-slate-900 text-white py-24 border-t border-white/5 w-full">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-16">
           <div className="col-span-2">
-            <div className="flex items-center gap-2 mb-8">
+            <div className="flex items-center gap-2 mb-8 cursor-pointer" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
               <div className="bg-emerald-600 p-2 rounded-lg">
                 <Building2 className="text-white" size={24} />
               </div>
@@ -281,9 +406,9 @@ const App = () => {
           <div>
             <h5 className="font-bold text-sm uppercase tracking-widest text-emerald-500 mb-8">Navigation</h5>
             <ul className="space-y-5 text-slate-400 font-bold uppercase text-[10px] tracking-widest">
-              <li><a href="#" className="hover:text-white transition-colors">Our Strategy</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Past Projects</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Investment Criteria</a></li>
+              <li><a href="#strategy" className="hover:text-white transition-colors">Our Strategy</a></li>
+              <li><a href="#portfolio" className="hover:text-white transition-colors">Past Projects</a></li>
+              <li><a href="#contact" className="hover:text-white transition-colors">Submit A Deal</a></li>
             </ul>
           </div>
           <div>
