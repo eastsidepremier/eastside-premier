@@ -17,19 +17,21 @@ import {
   ShieldCheck,
   Gem,
   ExternalLink,
-  Mail
+  Mail,
+  ShieldAlert,
+  ArrowLeft
 } from 'lucide-react';
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [currentPage, setCurrentPage] = useState('home'); // 'home', 'privacy', 'terms'
 
-  // SEO and Metadata Injection for the Eastside Market
+  // SEO and Metadata Injection
   useEffect(() => {
     document.title = "Eastside Premier Properties | Premier Real Estate Flipping & Acquisitions";
 
-    // Injecting reset styles to fix local "white space" on the right
     const style = document.createElement('style');
     style.innerHTML = `
       body, html {
@@ -37,6 +39,7 @@ const App = () => {
         padding: 0;
         width: 100%;
         overflow-x: hidden;
+        scroll-behavior: smooth;
       }
       #root {
         width: 100%;
@@ -46,24 +49,22 @@ const App = () => {
     `;
     document.head.appendChild(style);
 
-    const metaDescription = document.createElement('meta');
-    metaDescription.name = "description";
-    metaDescription.content = "Eastside Premier Properties: The leading real estate redevelopment firm in Bellevue, Kirkland, and Redmond. We specialize in high-margin flips and off-market acquisitions.";
-    document.head.appendChild(metaDescription);
-
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (metaDescription.parentNode) document.head.removeChild(metaDescription);
       if (style.parentNode) document.head.removeChild(style);
     };
   }, []);
 
+  // Reset scroll on page change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentPage]);
+
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    // Logic for submission would go here
     setIsSubmitted(true);
   };
 
@@ -105,11 +106,116 @@ const App = () => {
     }
   ];
 
-  const targetCities = [
-    { name: 'Bellevue', zip: '98004, 98005, 98006, 98007', highlight: 'West Bellevue Luxury & Somerset Views' },
-    { name: 'Kirkland', zip: '98033, 98034', highlight: 'Waterfront Cottages & Rose Hill Gems' },
-    { name: 'Redmond', zip: '98052, 98053', highlight: 'Education Hill & Tech Corridor Moderns' }
-  ];
+  const Footer = () => (
+    <footer className="bg-slate-900 text-white py-24 border-t border-white/5 w-full">
+      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-16">
+        <div className="col-span-2">
+          <div className="flex items-center gap-2 mb-8 cursor-pointer" onClick={() => setCurrentPage('home')}>
+            <div className="bg-emerald-600 p-2 rounded-lg">
+              <Building2 className="text-white" size={24} />
+            </div>
+            <span className="text-2xl font-black tracking-tighter">
+              EASTSIDE<span className="text-emerald-500">PREMIER</span>
+            </span>
+          </div>
+          <p className="text-slate-400 max-w-sm mb-10 leading-relaxed text-lg">
+            Setting the gold standard for redevelopment in King County's tech corridor. Precision acquisitions and world-class design.
+          </p>
+        </div>
+        <div>
+          <h5 className="font-bold text-sm uppercase tracking-widest text-emerald-500 mb-8">Navigation</h5>
+          <ul className="space-y-5 text-slate-400 font-bold uppercase text-[10px] tracking-widest">
+            <li><button onClick={() => {setCurrentPage('home'); setTimeout(() => document.getElementById('strategy')?.scrollIntoView(), 100)}} className="hover:text-white transition-colors">Our Strategy</button></li>
+            <li><button onClick={() => {setCurrentPage('home'); setTimeout(() => document.getElementById('portfolio')?.scrollIntoView(), 100)}} className="hover:text-white transition-colors">Past Projects</button></li>
+            <li><button onClick={() => {setCurrentPage('home'); setTimeout(() => document.getElementById('contact')?.scrollIntoView(), 100)}} className="hover:text-white transition-colors">Submit A Deal</button></li>
+          </ul>
+        </div>
+        <div>
+          <h5 className="font-bold text-sm uppercase tracking-widest text-emerald-500 mb-8">Contact</h5>
+          <ul className="space-y-5 text-slate-400">
+            <li className="flex items-center gap-3"><Phone size={16} /> (425) 441-9990</li>
+            <li className="font-bold text-white underline decoration-emerald-500 underline-offset-8">deals@eastsidepremier.com</li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 mt-8">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+          <div>&copy; 2026 Eastside Premier Properties LLC. All Rights Reserved.</div>
+          <div className="flex gap-8">
+            <button onClick={() => setCurrentPage('privacy')} className="hover:text-white cursor-pointer transition-colors uppercase">Privacy Policy</button>
+            <button onClick={() => setCurrentPage('terms')} className="hover:text-white cursor-pointer transition-colors uppercase">Terms of Service</button>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+
+  if (currentPage === 'privacy') {
+    return (
+      <div className="min-h-screen bg-slate-50 text-slate-900">
+        <div className="max-w-4xl mx-auto px-6 py-24">
+          <button onClick={() => setCurrentPage('home')} className="flex items-center gap-2 text-emerald-600 font-black uppercase tracking-widest text-xs mb-12 hover:gap-4 transition-all">
+            <ArrowLeft size={16} /> Back to Home
+          </button>
+          <h1 className="text-5xl font-black mb-12 tracking-tighter uppercase italic">Privacy Policy</h1>
+          <div className="prose prose-slate max-w-none space-y-8 text-slate-600 leading-relaxed">
+            <section>
+              <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight mb-4">1. Information We Collect</h2>
+              <p>We collect information you provide directly to us through our property analysis forms, including your name, role, email address, phone number, and property address. We also collect metadata related to your interaction with our website to improve our services.</p>
+            </section>
+            <section>
+              <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight mb-4">2. SMS & Mobile Policy</h2>
+              <p className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100 font-medium text-slate-800">
+                <strong>Strict Non-Disclosure:</strong> No personal or mobile information will be shared with third parties or affiliates for marketing or promotional purposes. Your contact information is used exclusively for internal property analysis and communication regarding specific deals.
+              </p>
+            </section>
+            <section>
+              <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight mb-4">3. Use of Information</h2>
+              <p>We use the collected information to evaluate potential real estate acquisitions, contact you regarding property submissions, and provide updates on our redevelopment projects. We do not sell your data to lead generators or marketing firms.</p>
+            </section>
+            <section>
+              <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight mb-4">4. Security</h2>
+              <p>We implement industry-standard security measures to protect your property data and personal identifiers. However, no method of transmission over the internet is 100% secure.</p>
+            </section>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (currentPage === 'terms') {
+    return (
+      <div className="min-h-screen bg-slate-50 text-slate-900">
+        <div className="max-w-4xl mx-auto px-6 py-24">
+          <button onClick={() => setCurrentPage('home')} className="flex items-center gap-2 text-emerald-600 font-black uppercase tracking-widest text-xs mb-12 hover:gap-4 transition-all">
+            <ArrowLeft size={16} /> Back to Home
+          </button>
+          <h1 className="text-5xl font-black mb-12 tracking-tighter uppercase italic">Terms of Service</h1>
+          <div className="prose prose-slate max-w-none space-y-8 text-slate-600 leading-relaxed">
+            <section>
+              <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight mb-4">1. Acceptance of Terms</h2>
+              <p>By accessing Eastside Premier Properties' website and submitting property information, you agree to be bound by these terms. Our services are intended for property owners, licensed real estate professionals, and authorized wholesalers.</p>
+            </section>
+            <section>
+              <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight mb-4">2. Property Submissions</h2>
+              <p>Submission of a property through our portal does not constitute a binding purchase agreement. All offers or letters of intent issued by Eastside Premier Properties are subject to physical inspection, title review, and final underwriting.</p>
+            </section>
+            <section>
+              <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight mb-4">3. Representations</h2>
+              <p>You represent that the information provided regarding any property is accurate to the best of your knowledge and that you have the legal right to discuss or market said property.</p>
+            </section>
+            <section>
+              <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight mb-4">4. Intellectual Property</h2>
+              <p>All content, branding, and proprietary analysis methods displayed on this site are the property of Eastside Premier Properties LLC and may not be reproduced without written consent.</p>
+            </section>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 overflow-x-hidden w-full">
@@ -200,13 +306,6 @@ const App = () => {
               <h2 className="text-4xl md:text-6xl font-black tracking-tighter mb-6 uppercase italic">The Premier Edge.</h2>
               <p className="text-slate-500 text-lg">We don't just flip houses; we engineer value. Our team combines hyper-local market intelligence with world-class architectural design.</p>
             </div>
-            <div className="hidden md:block pb-2">
-              <div className="flex gap-4">
-                <div className="w-12 h-1 bg-emerald-500"></div>
-                <div className="w-12 h-1 bg-slate-200"></div>
-                <div className="w-12 h-1 bg-slate-200"></div>
-              </div>
-            </div>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-8">
@@ -270,44 +369,6 @@ const App = () => {
         </div>
       </section>
 
-      {/* City Focus */}
-      <section className="py-32 bg-slate-50 w-full">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
-            <div className="relative">
-              <div className="absolute -inset-4 bg-emerald-600/5 rounded-[3rem] -rotate-3"></div>
-              <img
-                src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80"
-                alt="Eastside Property"
-                className="relative rounded-[2.5rem] shadow-2xl z-10 grayscale hover:grayscale-0 transition-all duration-700 w-full"
-              />
-              <div className="absolute bottom-10 -left-10 bg-slate-900 text-white p-8 rounded-3xl shadow-2xl z-20 hidden md:block max-w-xs border-b-8 border-emerald-500">
-                <p className="text-lg font-bold leading-tight mb-2">"Eastside Premier handled our Kirkland estate with total discretion and a fair cash price."</p>
-                <div className="text-xs uppercase tracking-widest text-emerald-500 font-black">— Satisfied Seller</div>
-              </div>
-            </div>
-            <div>
-              <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-8 uppercase italic">Hyper-Local <br/>Targeting.</h2>
-              <div className="space-y-6">
-                {targetCities.map((city, i) => (
-                  <div key={i} className="flex gap-6 p-6 rounded-2xl hover:bg-white hover:shadow-xl transition-all border border-transparent hover:border-slate-100 group">
-                    <div className="flex-shrink-0 w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 font-black">
-                      0{i + 1}
-                    </div>
-                    <div>
-                      <h4 className="text-xl font-bold mb-1 flex items-center gap-2">
-                        {city.name} <span className="text-xs text-slate-400 font-mono">{city.zip}</span>
-                      </h4>
-                      <p className="text-slate-500 text-sm font-medium">{city.highlight}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Contact Section */}
       <section id="contact" className="py-32 bg-slate-900 relative w-full">
         <div className="max-w-4xl mx-auto px-6 relative z-10">
@@ -357,9 +418,20 @@ const App = () => {
                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Property Address</label>
                     <input required type="text" className="w-full bg-slate-50 border-0 border-b-2 border-slate-200 focus:border-emerald-500 px-0 py-3 focus:ring-0 transition text-lg font-bold" placeholder="123 Bellevue Way NE..." />
                   </div>
-                  <button type="submit" className="w-full bg-emerald-600 text-white font-black text-xl py-6 rounded-2xl hover:bg-slate-900 transition-all shadow-xl hover:-translate-y-1 flex items-center justify-center gap-4">
-                    SUBMIT FOR ANALYSIS <ArrowRight size={24} />
-                  </button>
+
+                  <div className="space-y-6">
+                    <div className="flex gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                      <ShieldAlert className="text-emerald-600 flex-shrink-0" size={20} />
+                      <p className="text-[11px] font-medium leading-relaxed text-slate-500 uppercase tracking-wider">
+                        No personal/mobile information will be shared with third parties/affiliates for marketing/promotional purposes.
+                      </p>
+                    </div>
+
+                    <button type="submit" className="w-full bg-emerald-600 text-white font-black text-xl py-6 rounded-2xl hover:bg-slate-900 transition-all shadow-xl hover:-translate-y-1 flex items-center justify-center gap-4">
+                      SUBMIT FOR ANALYSIS <ArrowRight size={24} />
+                    </button>
+                  </div>
+
                   <div className="flex items-center justify-center gap-6 pt-4 grayscale opacity-40">
                     <ShieldCheck size={20} />
                     <span className="text-[10px] font-bold uppercase tracking-widest">Confidential & Direct</span>
@@ -387,46 +459,7 @@ const App = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-slate-900 text-white py-24 border-t border-white/5 w-full">
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-16">
-          <div className="col-span-2">
-            <div className="flex items-center gap-2 mb-8 cursor-pointer" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
-              <div className="bg-emerald-600 p-2 rounded-lg">
-                <Building2 className="text-white" size={24} />
-              </div>
-              <span className="text-2xl font-black tracking-tighter">
-                EASTSIDE<span className="text-emerald-500">PREMIER</span>
-              </span>
-            </div>
-            <p className="text-slate-400 max-w-sm mb-10 leading-relaxed text-lg">
-              Setting the gold standard for redevelopment in King County's tech corridor. Precision acquisitions and world-class design.
-            </p>
-          </div>
-          <div>
-            <h5 className="font-bold text-sm uppercase tracking-widest text-emerald-500 mb-8">Navigation</h5>
-            <ul className="space-y-5 text-slate-400 font-bold uppercase text-[10px] tracking-widest">
-              <li><a href="#strategy" className="hover:text-white transition-colors">Our Strategy</a></li>
-              <li><a href="#portfolio" className="hover:text-white transition-colors">Past Projects</a></li>
-              <li><a href="#contact" className="hover:text-white transition-colors">Submit A Deal</a></li>
-            </ul>
-          </div>
-          <div>
-            <h5 className="font-bold text-sm uppercase tracking-widest text-emerald-500 mb-8">Contact</h5>
-            <ul className="space-y-5 text-slate-400">
-              <li className="flex items-center gap-3"><Phone size={16} /> (425) 441-9990</li>
-              <li className="font-bold text-white underline decoration-emerald-500 underline-offset-8">deals@eastsidepremier.com</li>
-            </ul>
-          </div>
-        </div>
-        <div className="max-w-7xl mx-auto px-6 pt-20 mt-20 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
-          <div>&copy; 2025 Eastside Premier Properties LLC.</div>
-          <div className="flex gap-8">
-            <span className="hover:text-white cursor-pointer">Privacy Policy</span>
-            <span className="hover:text-white cursor-pointer">Terms of Service</span>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
