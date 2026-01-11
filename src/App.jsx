@@ -134,7 +134,7 @@ const App = () => {
           <h5 className="font-bold text-sm uppercase tracking-widest text-emerald-500 mb-8">Contact</h5>
           <ul className="space-y-5 text-slate-400">
             <li className="flex items-center gap-3"><Phone size={16} /> (425) 441-9990</li>
-            <li className="font-bold text-white underline decoration-emerald-500 underline-offset-8">deals@eastsidepremier.com</li>
+            <li className="font-bold text-white underline decoration-emerald-500 underline-offset-8">deal@eastside-premier.com</li>
           </ul>
         </div>
       </div>
